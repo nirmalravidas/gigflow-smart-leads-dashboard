@@ -1,19 +1,17 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { config } from "../../../config/env";
 
 export const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || "587"),
-    secure: process.env.SMTP_SECURE === "true",
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
-    },
+    host: config.email.host,
+    port: config.email.port,
+    secure: config.email.secure,
+    auth: config.email.user && config.email.pass ? { 
+      user: config.email.user, 
+      pass: config.email.pass 
+    } : undefined,
 });
 
 export const sender = {
-  email: process.env.SENDER_EMAIL,
-  name: process.env.SENDER_NAME,
+  email: config.email.fromAddress,
+  name: config.email.fromName,
 };

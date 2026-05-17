@@ -18,13 +18,13 @@ export class ValidationError extends AppError {
 }
 
 export class UnauthorizedError extends AppError {
-    constructor(message: 'Unauthorized'){
+    constructor(message: string = 'Unauthorized'){
         super(message, 401);
     }
 }
 
 export class ForbiddenError extends AppError {
-    constructor(message: 'Access denied'){
+    constructor(message: string = 'Access denied'){
         super(message, 403);
     }
 }
