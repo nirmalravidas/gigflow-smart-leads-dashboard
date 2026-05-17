@@ -1,4 +1,4 @@
-import { UserRole } from "../enums/userRole-enum";
+import { UserRole } from "../enums/user-role.enum";
 import { Types } from "mongoose";
 
 export interface IUser {
