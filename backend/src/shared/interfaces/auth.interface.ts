@@ -1,5 +1,3 @@
-import { Request } from 'express';
-import { Types } from 'mongoose';
 import { UserRole } from '../enums/user-role.enum';
 import { IUserPublic } from './user.interface';
 

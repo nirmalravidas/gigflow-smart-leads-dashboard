@@ -44,4 +44,4 @@ export const config = {
   bcrypt: {
     saltRounds: Number(getEnv("BCRYPT_SALT_ROUNDS", "12")),
   },
-};
+} as const;

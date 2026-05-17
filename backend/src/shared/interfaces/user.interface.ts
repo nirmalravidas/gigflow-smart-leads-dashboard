@@ -7,8 +7,8 @@ export interface IUser {
     email: string;
     password: string;
     role: UserRole;
-    isEmailverified: boolean;
-    emailverificationToken?: string;
+    isEmailVerified: boolean;
+    emailVerificationToken?: string;
     emailVerificationExpires?: Date;
     passwordResetToken?:string;
     passwordResetExpires?: Date;
