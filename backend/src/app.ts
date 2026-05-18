@@ -2,6 +2,7 @@ import express, {Application} from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import authRoutes from './modules/auth/routes/auth.route';
+import leadsRoutes from './modules/leads/routes/lead.route'
 
 const createApp = (): Application => {
     const app = express();
@@ -22,6 +23,7 @@ const createApp = (): Application => {
 
     const API_PREFIX = '/api/v1';
     app.use(`${API_PREFIX}/auth`, authRoutes);
+    app.use(`${API_PREFIX}/leads`, leadsRoutes);
 
     return app;
 };
