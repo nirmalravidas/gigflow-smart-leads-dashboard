@@ -10,7 +10,7 @@ The scalable and secure backend API for the **GigFlow Smart Leads Dashboard**. I
 - **Authentication**: JSON Web Tokens (Access + Auto-Rotating Refresh Tokens)
 - **Security**: Helmet, CORS, Express-Rate-Limit, Bcrypt
 - **Validation**: Express-Validator & Zod (via shared types)
-- **Email Service**: Nodemailer (SMTP)
+- **Email Service**: Nodemailer
 
 ---
 
