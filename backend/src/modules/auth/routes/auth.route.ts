@@ -10,6 +10,7 @@ import {
     resetPasswordValidator,
     refreshTokenValidator,
 } from "../validators/auth.validator";
+import { authenticate } from "../../../middlewares/auth";
 
 const router = Router();
 
@@ -24,8 +25,8 @@ router.post('/reset-password', resetPasswordValidator, validate, authController.
 
 router.post('/refresh-token', refreshTokenValidator, validate, authController.refreshTokens.bind(authController));
 
-router.post('/signout', authController.signout.bind(authController));
+router.post('/signout', authenticate, authController.signout.bind(authController));
 
-router.get('/me', authController.getProfile.bind(authController));
+router.get('/me', authenticate, authController.getProfile.bind(authController));
 
 export default router;
