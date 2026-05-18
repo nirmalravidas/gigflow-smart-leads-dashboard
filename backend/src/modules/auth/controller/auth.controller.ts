@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { authServive } from "../service/auth.service";
-import { sendSuccess } from "../../../shared/utils/apiResponse";
-import { HttpStatus } from "../../../shared/types";
+import { sendSuccess } from "../../../utils/apiResponse";
+import { HttpStatus } from "../../../types";
 
 class AuthController {
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {

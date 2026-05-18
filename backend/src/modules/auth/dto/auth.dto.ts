@@ -1,4 +1,4 @@
-import { UserRole } from "../../../shared/types";
+import { UserRole } from "../../../types";
 
 // Signup DTO
 export interface ISignupDto {

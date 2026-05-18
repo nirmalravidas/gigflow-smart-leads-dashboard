@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import { config } from '../../../config/env';
+import { config } from '../../config/env';
 import { IJwtPayload, ITokenPair, UserRole } from '../../types';
 
 export const generateAccessToken = (payload: IJwtPayload): string => {

@@ -1,4 +1,4 @@
-import { hashToken } from '../../../shared/utils/jwt/token';
+import { hashToken } from '../../../utils/jwt/token';
 import { authDao } from '../dao/auth.dao';
 import { IUserDocument, ICreateUserDto } from '../interfaces/auth.interface';
 

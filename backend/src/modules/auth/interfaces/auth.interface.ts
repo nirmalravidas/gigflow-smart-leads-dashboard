@@ -1,4 +1,4 @@
-import { ITokenPair, IUser, IUserPublic, UserRole } from '../../../shared/types';
+import { ITokenPair, IUser, IUserPublic, UserRole } from '../../../types';
 import { Document } from 'mongoose';
 import { ISigninDto, ISignupDto } from '../dto/auth.dto';
 

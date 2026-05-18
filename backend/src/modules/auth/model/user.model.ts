@@ -1,7 +1,7 @@
 import mongoose, {Schema, Model} from "mongoose";
 import bcrypt from "bcryptjs";
 import { IUserDocument } from "../interfaces/auth.interface";
-import { UserRole } from "../../../shared/types";
+import { UserRole } from "../../../types";
 import { config } from "../../../config/env";
 
 // user model interface
