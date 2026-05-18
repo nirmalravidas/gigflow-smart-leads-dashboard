@@ -1,156 +1,97 @@
-# SmartLeads Backend (Express + TypeScript + MongoDB)
+# GigFlow Backend (Express + TypeScript)
 
-Backend API for the SmartLeads dashboard. Includes authentication (JWT access + refresh), email verification, password reset, leads CRUD, CSV export, role-based access, request validation, and production hardening (health check, error handler, graceful shutdown).
+The scalable and secure backend API for the **GigFlow Smart Leads Dashboard**. It provides robust JWT authentication, strict role-based access control (RBAC), and high-performance lead aggregation via MongoDB.
 
 ## Tech Stack
 
-- Node.js + Express
-- TypeScript
-- MongoDB + Mongoose
-- JWT auth (access + refresh)
-- Nodemailer (SMTP)
-- `express-validator` (request validation)
-- Docker (production image)
+- **Runtime**: Node.js
+- **Framework**: Express.js + TypeScript
+- **Database**: MongoDB (via Mongoose)
+- **Authentication**: JSON Web Tokens (Access + Auto-Rotating Refresh Tokens)
+- **Security**: Helmet, CORS, Express-Rate-Limit, Bcrypt
+- **Validation**: Express-Validator & Zod (via shared types)
+- **Email Service**: Nodemailer (SMTP)
 
-## Folder Structure
+---
 
-```
+## Feature-Based Structure
+
+The backend organizes logic by domains rather than technical boundaries:
+
+```text
 backend/
-  src/
-    app.ts                 # Express app + routes + middleware
-    server.ts              # Server startup + graceful shutdown
-    config/                # env config loader/validation
-    database/              # MongoDB connection
-    middlewares/           # auth, validation, rate limiting, error handlers
-    modules/               # feature modules (auth/leads/users)
-    utils/                 # helpers (jwt, mail, api responses, errors)
-  Dockerfile
-  .env.example
+├── src/
+│   ├── config/                # Environment validation & loading
+│   ├── database/              # MongoDB connection handling
+│   ├── middlewares/           # Global logic (Auth, Rate Limiter, Error Handler)
+│   ├── modules/               # The Core Features
+│   │   ├── auth/              # Signup, Signin, Tokens, Password Reset
+│   │   ├── leads/             # Lead CRUD, Stats, CSV Export, Filtering
+│   │   └── users/             # User Management (Admin only)
+│   ├── types/                 # Shared TypeScript interfaces & enums
+│   └── utils/                 # Helpers (JWT generation, Mailer)
+├── app.ts                     # Express app initialization
+├── server.ts                  # Server startup & Graceful Shutdown logic
+└── Dockerfile                 # Production-ready Docker configuration
 ```
 
-## Prerequisites
+---
 
-- Node.js 20+ recommended
-- Yarn (or npm)
-- MongoDB connection string (Atlas or self-hosted)
+## Local Development
 
-## Environment Variables
-
-Copy the example file and fill values:
-
-```
+### 1. Environment Setup
+Copy the example environment file:
+```bash
 cp .env.example .env
 ```
+Fill in the required variables:
+- `MONGODB_URI`: Your MongoDB connection string.
+- `JWT_SECRET` & `JWT_REFRESH_SECRET`: Secure random strings.
+- `CLIENT_URL`: Important for CORS! Set to `http://localhost:5173`.
+- `SMTP_*`: Your SMTP server credentials (e.g., Mailtrap, SendGrid).
 
-Required:
-
-- `MONGODB_URI`
-- `JWT_SECRET`
-- `JWT_REFRESH_SECRET`
-- `CLIENT_URL` (comma-separated allowed origins)
-
-Recommended:
-
-- `NODE_ENV=development|production`
-- `PORT=5000`
-
-Email (required when `NODE_ENV=production`):
-
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`
-- `SMTP_USER`, `SMTP_PASS`
-- `EMAIL_FROM_ADDRESS`, `EMAIL_FROM_NAME`
-
-## Install & Run (Local)
-
-From repo root:
-
-```
-yarn --cwd backend install
-yarn --cwd backend dev
+### 2. Install Dependencies
+```bash
+yarn install
 ```
 
-Build & lint:
-
+### 3. Run Development Server
+```bash
+yarn dev
 ```
-yarn --cwd backend build
-yarn --cwd backend lint
+The server will start on `http://localhost:5000` using `ts-node-dev` for hot-reloading.
+
+---
+
+## Building & Production
+
+To compile the TypeScript code down to production-ready JavaScript:
+```bash
+yarn build
 ```
+This generates a `/dist` folder.
 
-Default base URL:
-
-- `http://localhost:5000/api/v1`
-
-## Health Check
-
-- `GET /api/v1/health`
-
-Expected response:
-
-```json
-{ "success": true, "status": "ok" }
-```
-
-## API Overview
-
-Base prefix: `/api/v1`
-
-Auth:
-
-- `POST /auth/signup`
-- `POST /auth/signin`
-- `POST /auth/verify-email`
-- `POST /auth/resend-verification`
-- `POST /auth/forgot-password`
-- `POST /auth/reset-password`
-- `POST /auth/refresh-token`
-- `POST /auth/signout`
-- `GET /auth/me`
-
-Leads (auth required):
-
-- `GET /leads`
-- `GET /leads/:id`
-- `POST /leads`
-- `PUT /leads/:id`
-- `DELETE /leads/:id` (admin only)
-- `GET /leads/stats`
-- `GET /leads/export`
-
-Users (auth required; admin-only actions depend on route rules):
-
-- `GET /users`
-- `GET /users/:id`
-- `PATCH /users/:id/role`
-- `DELETE /users/:id`
-
-## Docker (Run Locally)
-
-Build:
-
-```
-docker build -t smartleads-backend ./backend
+To start the production server:
+```bash
+yarn start
 ```
 
-Run:
+---
 
+## Deployment (DigitalOcean App Platform)
+
+This backend is perfectly structured to deploy on platforms like DigitalOcean, Render, or Railway.
+
+**DigitalOcean App Platform Guide**:
+1. Connect your GitHub repository.
+2. Select the `backend/` directory as the source.
+3. DigitalOcean will automatically detect the `package.json` `start` script.
+4. Input all of your `.env` variables into the App Platform dashboard.
+5. **Health Check**: Set the health check path to `/api/v1/health`.
+
+### Docker
+Alternatively, you can build and run the provided `Dockerfile` anywhere:
+```bash
+docker build -t gigflow-backend ./backend
+docker run -p 5000:5000 --env-file ./backend/.env gigflow-backend
 ```
-docker run --rm -p 5000:5000 --env-file ./backend/.env smartleads-backend
-```
-
-## Deploy (DigitalOcean App Platform)
-
-Use the repo folder `backend/` as the service root and deploy via `backend/Dockerfile`.
-
-Set environment variables in App Platform:
-
-- `NODE_ENV=production`
-- `PORT=5000`
-- `MONGODB_URI=...`
-- `JWT_SECRET=...`
-- `JWT_REFRESH_SECRET=...`
-- `CLIENT_URL=https://<your-netlify-site>.netlify.app`
-- SMTP vars (see above)
-
-Health check path:
-
-- `/api/v1/health`
