@@ -21,7 +21,13 @@ const createApp = (): Application => {
     // CORS configuration
     app.use(
         cors({
-            origin: config.client.url,
+            origin: (origin, callback) => {
+                // allow non-browser tools (curl/postman) with no Origin header
+                if (!origin) return callback(null, true);
+                if (config.client.urls.length === 0) return callback(null, false);
+                if (config.client.urls.includes(origin)) return callback(null, true);
+                return callback(null, false);
+            },
             credentials: true,
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization'],

@@ -47,13 +47,13 @@ export const sendPasswordResetSuccessEmail = async (email: string) => {
   }
 };
 
-export const sendVerificationCodeEmail = async (email: string, verificationToken: string) => {
-  const htmlContent = generateVerificationCodeEmail(verificationToken);
+export const sendVerificationCodeEmail = async (email: string, verificationUrl: string) => {
+  const htmlContent = generateVerificationCodeEmail(verificationUrl);
   try {
     await transporter.sendMail({
       from: `${sender.name} <${sender.email}>`,
       to: email,
-      subject: "verify your email.",
+      subject: "Verify your email",
       html: htmlContent,
     });
   } catch (error) {

@@ -10,6 +10,12 @@ const assertRequired = (key: string): void => {
   }
 };
 
+const parseCsv = (value: string | undefined): string[] =>
+  String(value || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
 export const config = {
   server: {
     nodeEnv: getEnv("NODE_ENV", "development"),
@@ -39,7 +45,8 @@ export const config = {
   },
 
   client: {
-    url: getEnv("CLIENT_URL"),
+    urls: parseCsv(process.env.CLIENT_URL),
+    url: getEnv("CLIENT_URL").split(',')[0]?.trim() || '',
   },
 
   rateLimit: {

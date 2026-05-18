@@ -2,12 +2,35 @@ import { Request, Response, NextFunction } from 'express';
 import { leadService } from '../service/lead.service';
 import { HttpStatus, IAuthenticatedRequest, ILeadFilters, LeadSource, LeadStatus, SortOrder } from '../../../types';
 import { sendPaginated, sendSuccess } from '../../../utils/apiResponse';
+import { ValidationError } from '../../../utils/errors/AppError';
 
 // extract a scalar query param 
 const qs = (val: unknown): string | undefined => {
     if (typeof val === 'string') return val || undefined;
     if (Array.isArray(val) && typeof val[0] === 'string') return val[0] || undefined;
     return undefined;
+};
+
+const parseEnum = <T extends Record<string, string>>(
+    enumObj: T,
+    value: string | undefined,
+    field: string,
+): T[keyof T] | undefined => {
+    if (!value) return undefined;
+    const values = Object.values(enumObj) as string[];
+    if (!values.includes(value)) {
+        throw new ValidationError(`Invalid ${field}`);
+    }
+    return value as T[keyof T];
+};
+
+const parseNumber = (value: string | undefined, field: string, defaultValue: number): number => {
+    if (!value) return defaultValue;
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) {
+        throw new ValidationError(`Invalid ${field}`);
+    }
+    return n;
 };
 
 const ps = (val: string | string[] | undefined): string =>
@@ -29,13 +52,17 @@ class LeadController {
         try {
             const authReq = req as IAuthenticatedRequest;
 
+            const statusParam = qs(req.query['status']);
+            const sourceParam = qs(req.query['source']);
+            const sortParam = qs(req.query['sort']);
+
             const filters: ILeadFilters = {
-                status: qs(req.query['status']) as LeadStatus | undefined,
-                source: qs(req.query['source']) as LeadSource | undefined,
+                status: parseEnum(LeadStatus, statusParam, 'status'),
+                source: parseEnum(LeadSource, sourceParam, 'source'),
                 search: qs(req.query['search']),
-                sort: (qs(req.query['sort']) as SortOrder | undefined) ?? SortOrder.LATEST,
-                page: req.query['page'] ? Number(qs(req.query['page'])) : 1,
-                limit: req.query['limit'] ? Number(qs(req.query['limit'])) : 10,
+                sort: parseEnum(SortOrder, sortParam, 'sort') ?? SortOrder.LATEST,
+                page: parseNumber(qs(req.query['page']), 'page', 1),
+                limit: parseNumber(qs(req.query['limit']), 'limit', 10),
             };
 
             const result = await leadService.getLeads(filters, authReq.user);
@@ -79,11 +106,15 @@ class LeadController {
         try {
             const authReq = req as IAuthenticatedRequest;
 
+            const statusParam = qs(req.query['status']);
+            const sourceParam = qs(req.query['source']);
+            const sortParam = qs(req.query['sort']);
+
             const filters: Omit<ILeadFilters, 'page' | 'limit'> = {
-                status: qs(req.query['status']) as LeadStatus | undefined,
-                source: qs(req.query['source']) as LeadSource | undefined,
+                status: parseEnum(LeadStatus, statusParam, 'status'),
+                source: parseEnum(LeadSource, sourceParam, 'source'),
                 search: qs(req.query['search']),
-                sort: (qs(req.query['sort']) as SortOrder | undefined) ?? SortOrder.LATEST,
+                sort: parseEnum(SortOrder, sortParam, 'sort') ?? SortOrder.LATEST,
             };
 
             const leads = await leadService.exportLeadsToCSV(filters, authReq.user);

@@ -1,4 +1,4 @@
-export const generateVerificationCodeEmail = (verificationToken: string) => {
+export const generateVerificationCodeEmail = (verificationUrl: string) => {
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -15,9 +15,10 @@ export const generateVerificationCodeEmail = (verificationToken: string) => {
                         </h1>      
                     </div>
                     <div>
-                        <p>Enter verification code to verify your email.</p>
-                        <p>Verification code: </p>
-                        <p><b>${verificationToken}</b></p>
+                        <p>Click the link below to verify your email address:</p>
+                        <p><a href="${verificationUrl}">${verificationUrl}</a></p>
+                        <p>This link will expire in 24 hours.</p>
+                        <p>If you didn't create an account, you can safely ignore this email.</p>
                     </div>
                 </div>
             </body>

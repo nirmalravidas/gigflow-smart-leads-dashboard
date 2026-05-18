@@ -11,6 +11,7 @@ const VERIFICATION_EXPIRY_MS = 24 * 60 * 60 * 1000;
 const RESET_EXPIRY_MS = 60 * 60 * 1000;
 
 class AuthService {
+
     async signup(dto: ISignupDto): Promise<{ user: IUserPublic }> {
         const existingUser = await authRepository.emailExists(dto.email);
 
@@ -29,7 +30,13 @@ class AuthService {
             emailVerificationExpires: new Date(Date.now() + VERIFICATION_EXPIRY_MS),
         });
 
-        sendVerificationCodeEmail(user.email, verificationToken).catch((error) => {
+        // Generate verification URL (similar to forgot password)
+        const baseUrl = config.client.url?.replace(/\/+$/, '') || '';
+        const verificationUrl = baseUrl
+            ? `${baseUrl}/verify-email?token=${encodeURIComponent(verificationToken)}`
+            : verificationToken;
+
+        sendVerificationCodeEmail(user.email, verificationUrl).catch((error) => {
             console.error('[AuthService] Failed to send verification email:', error);
         });
 
@@ -72,7 +79,13 @@ class AuthService {
             new Date(Date.now() + VERIFICATION_EXPIRY_MS),
         );
 
-        await sendVerificationCodeEmail(user.email, verificationToken);
+        // Generate verification URL
+        const baseUrl = config.client.url?.replace(/\/+$/, '') || '';
+        const verificationUrl = baseUrl
+            ? `${baseUrl}/verify-email?token=${encodeURIComponent(verificationToken)}`
+            : verificationToken;
+
+        await sendVerificationCodeEmail(user.email, verificationUrl);
     }
 
     async signin(dto: ISigninDto): Promise<{ user: IUserPublic; tokens: ITokenPair; }> {
