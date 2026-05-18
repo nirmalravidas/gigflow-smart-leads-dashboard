@@ -1,6 +1,6 @@
 import { ITokenPair, IUserPublic, UserRole } from "../../../types";
 import { authRepository } from "../repository/auth.repository";
-import { AppError, ConflictError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
+import { AppError, ConflictError, NotFoundError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
 import { generateSecureToken, generateTokenPair, hashToken, verifyRefreshToken } from "../../../utils/jwt/token";
 import { ISigninDto, ISignupDto } from "../dto/auth.dto";
 import { sendPasswordResetEmail, sendPasswordResetSuccessEmail, sendVerificationCodeEmail, sendWelcomeEmail } from "../../../utils/mail/email";
@@ -199,6 +199,16 @@ class AuthService {
                 error,
             );
         });
+    }
+
+    async getProfile(userId: string): Promise<IUserPublic> {
+        const user = await authRepository.findById(userId);
+
+        if (!user) {
+            throw new NotFoundError('User');
+        }
+
+        return this.toPublicUser(user);
     }
 
 

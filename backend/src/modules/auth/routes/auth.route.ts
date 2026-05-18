@@ -10,9 +10,12 @@ router.post('/verify-email', authController.verifyEmail.bind(authController));
 router.post('/resend-verification', authController.resendVerificationEmail.bind(authController));
 
 router.post('/forgot-password', authController.forgotPassword.bind(authController));
+router.post('/reset-password', authController.resetPassword.bind(authController));
 
 router.post('/refresh-token', authController.refreshTokens.bind(authController));
 
 router.post('/signout', authController.signout.bind(authController));
+
+router.get('/me', authController.getProfile.bind(authController));
 
 export default router;

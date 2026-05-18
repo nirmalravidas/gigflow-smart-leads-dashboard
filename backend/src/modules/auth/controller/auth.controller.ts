@@ -84,7 +84,7 @@ class AuthController {
         }
     }
 
-      async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { token, password } = req.body as { token: string; password: string };
             await authService.resetPassword(token, password);
@@ -92,6 +92,16 @@ class AuthController {
                 res,
                 'Password reset successfully. You can now sign in with your new password.',
             );
+        } catch (error) {
+                next(error);
+        }
+    }
+
+    async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const authReq = req as IAuthenticatedRequest;
+            const user = await authService.getProfile(authReq.user.userId);
+            sendSuccess(res, 'Profile fetched successfully', user);
         } catch (error) {
             next(error);
         }
