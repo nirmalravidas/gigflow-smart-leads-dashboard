@@ -1,8 +1,8 @@
 import mongoose, {Schema, Model} from "mongoose";
 import bcrypt from "bcryptjs";
 import { IUserDocument } from "../interfaces/auth.interface";
-import { UserRole } from "@/shared/types";
-import { config } from "@/config/env";
+import { UserRole } from "../../../shared/types";
+import { config } from "../../../config/env";
 
 // user model interface
 interface IUserModel extends Model<IUserDocument> {
@@ -106,7 +106,6 @@ userSchema.statics.findByEmail = function (email: string){
 }
 
 // indexes
-userSchema.index({email: 1});
 userSchema.index({ emailVerificationToken: 1});
 userSchema.index({ passwordResetToken: 1});
 userSchema.index({ role: 1});

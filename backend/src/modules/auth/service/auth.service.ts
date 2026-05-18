@@ -1,9 +1,9 @@
-import { IUserPublic, UserRole } from "@/shared/types";
+import { IUserPublic, UserRole } from "../../../shared/types";
 import { authRepository } from "../repository/auth.repository";
-import { ConflictError, ValidationError } from "@/shared/utils/errors/AppError";
-import { generateSecureToken, hashToken } from "@/shared/utils/jwt/token";
+import { ConflictError, ValidationError } from "../../../shared/utils/errors/AppError";
+import { generateSecureToken, hashToken } from "../../../shared/utils/jwt/token";
 import { ISignupDto } from "../dto/auth.dto";
-import { sendVerificationCodeEmail, sendWelcomeEmail } from "@/shared/utils/mail/email";
+import { sendVerificationCodeEmail, sendWelcomeEmail } from "../../../shared/utils/mail/email";
 import { IUserDocument } from "../interfaces/auth.interface";
 
 const VERIFICATION_EXPIRY_MS = 24 * 60 * 60 * 1000;
