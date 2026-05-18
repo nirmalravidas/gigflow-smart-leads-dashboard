@@ -1,7 +1,7 @@
 import { ITokenPair, IUserPublic, UserRole } from "../../../types";
 import { authRepository } from "../repository/auth.repository";
 import { ConflictError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
-import { generateSecureToken, generateTokenPair, hashToken } from "../../../utils/jwt/token";
+import { generateSecureToken, generateTokenPair, hashToken, verifyRefreshToken } from "../../../utils/jwt/token";
 import { ISigninDto, ISignupDto } from "../dto/auth.dto";
 import { sendVerificationCodeEmail, sendWelcomeEmail } from "../../../utils/mail/email";
 import { IUserDocument } from "../interfaces/auth.interface";
@@ -107,6 +107,37 @@ class AuthService {
             user: this.toPublicUser(user),
             tokens,
         };
+    }
+
+    async refreshTokens(rawRefreshToken: string): Promise<ITokenPair> {
+        let payload;
+
+        try {
+            payload = verifyRefreshToken(rawRefreshToken);
+        } catch {
+            throw new UnauthorizedError('Invalid or expired refresh token');
+        }
+
+        const hashedToken = hashToken(rawRefreshToken);
+
+        const user = await authRepository.findByHashedRefreshToken(hashedToken);
+
+        if (!user || user._id.toString() !== payload.userId) {
+            throw new UnauthorizedError('Invalid refresh token');
+        }
+
+        const tokens = generateTokenPair(
+            user._id.toString(),
+            user.email,
+            user.role,
+        );
+
+        await authRepository.setRefreshToken(
+            user._id.toString(),
+            tokens.refreshToken,
+        );
+
+        return tokens;
     }
 
 

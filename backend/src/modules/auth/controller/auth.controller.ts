@@ -50,6 +50,16 @@ class AuthController {
             next(error);
         }
     }
+
+    async refreshTokens(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { refreshToken } = req.body as { refreshToken: string };
+            const tokens = await authService.refreshTokens(refreshToken);
+            sendSuccess(res, 'Tokens refreshed successfully', tokens);
+        } catch (error) {
+            next(error);
+        }
+     }
 }
 
 export const authController = new AuthController();
