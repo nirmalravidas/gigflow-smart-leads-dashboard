@@ -1,7 +1,7 @@
 import { usersRepository } from '../repository/user.repository';
 import { IUserDocument } from '../../auth/interfaces/auth.interface';
-import { IUserPublic, UserRole } from '@/types';
-import { NotFoundError } from '@/utils/errors/AppError';
+import { IUserPublic, UserRole } from '../../../types';
+import { NotFoundError } from '../../../utils/errors/AppError';
 
 class UsersService {
     async listUsers(): Promise<IUserPublic[]> {

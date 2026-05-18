@@ -11,7 +11,7 @@ import {
     refreshTokenValidator,
 } from "../validators/auth.validator";
 import { authenticate } from "../../../middlewares/auth";
-import { authRateLimiter, passwordResetLimiter } from "@/middlewares/rateLimiter";
+import { authRateLimiter, passwordResetLimiter } from "../../../middlewares/rateLimiter";
 
 const router = Router();
 

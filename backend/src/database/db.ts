@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import { config } from "../config/env";
 
 mongoose.set("strictQuery", true);
 
 export const connectDatabase = async (): Promise<void> => {
     try {
-        const mongoURI = process.env.MONGODB_URI;
+        const mongoURI = config.database.uri;
 
         if (!mongoURI) {
             throw new Error("MONGODB_URI is not defined");

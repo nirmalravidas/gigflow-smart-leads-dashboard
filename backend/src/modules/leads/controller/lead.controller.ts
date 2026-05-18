@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { leadService } from '../service/lead.service';
-import { HttpStatus, IAuthenticatedRequest, ILeadFilters, LeadSource, LeadStatus, SortOrder } from '@/types';
-import { sendPaginated, sendSuccess } from '@/utils/apiResponse';
+import { HttpStatus, IAuthenticatedRequest, ILeadFilters, LeadSource, LeadStatus, SortOrder } from '../../../types';
+import { sendPaginated, sendSuccess } from '../../../utils/apiResponse';
 
 // extract a scalar query param 
 const qs = (val: unknown): string | undefined => {

@@ -1,7 +1,7 @@
 import { PipelineStage } from "mongoose";
 import { ILeadDocument, ILeadQueryOptions } from "../interfaces/lead.interface";
 import { LeadModel } from "../model/lead.model";
-import { ILeadStats } from "@/types";
+import { ILeadStats } from "../../../types";
 
 const POPULATE_CONFIG = [
   { path: 'createdBy', select: 'name email' },

@@ -7,9 +7,13 @@ import leadsRoutes from './modules/leads/routes/lead.route';
 import userRoutes from './modules/users/routes/user.route';
 import { globalRateLimiter } from './middlewares/rateLimiter';
 import { config } from './config/env';
+import { notFound } from './middlewares/notFound';
+import { errorHandler } from './middlewares/errorHandler';
 
 const createApp = (): Application => {
     const app = express();
+
+    app.set('trust proxy', 1);
 
     // security header
     app.use(helmet());
@@ -38,9 +42,16 @@ const createApp = (): Application => {
     app.use(globalRateLimiter);
 
     const API_PREFIX = '/api/v1';
+    app.get(`${API_PREFIX}/health`, (_req, res) => {
+        res.status(200).json({ success: true, status: 'ok' });
+    });
     app.use(`${API_PREFIX}/auth`, authRoutes);
     app.use(`${API_PREFIX}/leads`, leadsRoutes);
     app.use(`${API_PREFIX}/users`, userRoutes)
+
+    // 404 + error handler
+    app.use(notFound);
+    app.use(errorHandler);
 
     return app;
 };

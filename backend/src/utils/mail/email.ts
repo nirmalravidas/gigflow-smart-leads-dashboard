@@ -12,7 +12,7 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
             subject: "Welcome",
             html: htmlContent,
         });
-    } catch (error) {
+    } catch {
         throw new Error("Failed to send welcome email");
     }
 };

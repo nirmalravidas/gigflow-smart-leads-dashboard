@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { usersService } from '../service/user.service';
 import { IUpdateUserRoleDto } from '../dto/user.dto';
-import { sendSuccess } from '@/utils/apiResponse';
+import { sendSuccess } from '../../../utils/apiResponse';
 
 class UsersController {
     async listUsers(_req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -1,7 +1,7 @@
-import { ILeadFilters, ILeadStats, SortOrder } from "@/types";
+import { ILeadFilters, ILeadStats, SortOrder } from "../../../types";
 import { leadDao } from "../dao/dao.lead";
 import { ILeadDocument } from "../interfaces/lead.interface";
-import { PaginationDto } from "@/dto/pagination.dto";
+import { PaginationDto } from "../../../dto/pagination.dto";
 import { ICreateLeadDto, IUpdateLeadDto } from "../dto/lead.dto";
 
 class LeadRepository {

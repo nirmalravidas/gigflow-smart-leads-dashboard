@@ -1,4 +1,4 @@
-import { IAuthenticatedRequest, UserRole } from '@/types';
+import { IAuthenticatedRequest, UserRole } from '../types';
 import { ForbiddenError, UnauthorizedError } from '../utils/errors/AppError';
 import { verifyAccessToken } from '../utils/jwt/token';
 import {Request, Response, NextFunction} from 'express';

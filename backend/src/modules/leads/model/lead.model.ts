@@ -1,8 +1,8 @@
-import mongoose, { Schema, Model, PipelineStage } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
 import { ILeadDocument } from '../interfaces/lead.interface';
 import { LeadSource, LeadStatus } from '../../../types';
 
-interface ILeadModel extends Model<ILeadDocument> {}
+type ILeadModel = Model<ILeadDocument>;
 
 // Lead Schema
 const leadSchema = new Schema<ILeadDocument>(
