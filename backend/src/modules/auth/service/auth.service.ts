@@ -1,12 +1,14 @@
 import { ITokenPair, IUserPublic, UserRole } from "../../../types";
 import { authRepository } from "../repository/auth.repository";
-import { ConflictError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
+import { AppError, ConflictError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
 import { generateSecureToken, generateTokenPair, hashToken, verifyRefreshToken } from "../../../utils/jwt/token";
 import { ISigninDto, ISignupDto } from "../dto/auth.dto";
-import { sendVerificationCodeEmail, sendWelcomeEmail } from "../../../utils/mail/email";
+import { sendPasswordResetEmail, sendPasswordResetSuccessEmail, sendVerificationCodeEmail, sendWelcomeEmail } from "../../../utils/mail/email";
 import { IUserDocument } from "../interfaces/auth.interface";
+import { config } from "../../../config/env";
 
 const VERIFICATION_EXPIRY_MS = 24 * 60 * 60 * 1000;
+const RESET_EXPIRY_MS = 60 * 60 * 1000;
 
 class AuthService {
     async signup(dto: ISignupDto): Promise<{ user: IUserPublic }> {
@@ -142,6 +144,61 @@ class AuthService {
 
     async signout(userId: string): Promise<void> {
         await authRepository.clearRefreshToken(userId);
+    }
+
+    async forgotPassword(email: string): Promise<void> {
+        const user = await authRepository.findByEmail(email.toLowerCase());
+
+        if (!user) return;
+
+        const resetToken = generateSecureToken();
+
+        await authRepository.setResetToken(
+            user._id.toString(),
+            resetToken,
+            new Date(Date.now() + RESET_EXPIRY_MS),
+        );
+
+        const baseUrl = config.client.url?.replace(/\/+$/, '') || '';
+            const resetUrl = baseUrl
+                ? `${baseUrl}/reset-password?token=${encodeURIComponent(resetToken)}`
+                : resetToken;
+
+        try {
+            await sendPasswordResetEmail(user.email, resetUrl);
+        } catch (error) {
+            await authRepository.clearResetToken(user._id.toString());
+
+            console.error('[AuthService] Forgot password email failed:', error);
+
+            throw new AppError(
+                'Failed to send password reset email. Please try again.',
+                500,
+            );
+        }
+    }
+
+    async resetPassword( rawToken: string, newPassword: string, ): Promise<void> {
+
+        const user = await authRepository.findByResetToken(rawToken);
+
+        if (!user) {
+            throw new ValidationError(
+                'Invalid or expired password reset token',
+            );
+        }
+
+        await authRepository.updatePassword(
+            user._id.toString(),
+            newPassword,
+        );
+
+        sendPasswordResetSuccessEmail(user.email).catch((error) => {
+            console.error(
+                '[AuthService] Password reset success email failed:',
+                error,
+            );
+        });
     }
 
 

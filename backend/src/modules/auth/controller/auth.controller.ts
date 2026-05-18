@@ -70,6 +70,32 @@ class AuthController {
             next(error);
         }
     }
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email } = req.body as { email: string };
+            await authService.forgotPassword(email);
+            sendSuccess(
+                res,
+                'If an account exists with that email, a password reset link has been sent.',
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
+
+      async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { token, password } = req.body as { token: string; password: string };
+            await authService.resetPassword(token, password);
+            sendSuccess(
+                res,
+                'Password reset successfully. You can now sign in with your new password.',
+            );
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export const authController = new AuthController();
