@@ -1,8 +1,8 @@
-import { IUserPublic, UserRole } from "../../../types";
+import { ITokenPair, IUserPublic, UserRole } from "../../../types";
 import { authRepository } from "../repository/auth.repository";
-import { ConflictError, ValidationError } from "../../../utils/errors/AppError";
-import { generateSecureToken, hashToken } from "../../../utils/jwt/token";
-import { ISignupDto } from "../dto/auth.dto";
+import { ConflictError, UnauthorizedError, ValidationError } from "../../../utils/errors/AppError";
+import { generateSecureToken, generateTokenPair, hashToken } from "../../../utils/jwt/token";
+import { ISigninDto, ISignupDto } from "../dto/auth.dto";
 import { sendVerificationCodeEmail, sendWelcomeEmail } from "../../../utils/mail/email";
 import { IUserDocument } from "../interfaces/auth.interface";
 
@@ -71,6 +71,42 @@ class AuthService {
         );
 
         await sendVerificationCodeEmail(user.email, verificationToken);
+    }
+
+    async signin(dto: ISigninDto): Promise<{ user: IUserPublic; tokens: ITokenPair; }> {
+        const user = await authRepository.findByEmail(dto.email.toLowerCase());
+
+        if (!user) {
+            throw new UnauthorizedError('Invalid email or password');
+        }
+
+        const isPasswordValid = await user.comparePassword(dto.password);
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedError('Invalid email or password');
+        }
+
+        if (!user.isEmailVerified) {
+            throw new UnauthorizedError(
+                'Please verify your email before signing in',
+            );
+        }
+
+        const tokens = generateTokenPair(
+            user._id.toString(),
+            user.email,
+            user.role,
+        );
+
+        await authRepository.setRefreshToken(
+            user._id.toString(),
+            tokens.refreshToken,
+        );
+
+        return {
+            user: this.toPublicUser(user),
+            tokens,
+        };
     }
 
 
