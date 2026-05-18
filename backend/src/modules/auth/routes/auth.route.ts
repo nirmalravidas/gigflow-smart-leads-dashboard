@@ -11,4 +11,6 @@ router.post('/resend-verification', authController.resendVerificationEmail.bind(
 
 router.post('/refresh-token', authController.refreshTokens.bind(authController));
 
+router.post('/signout', authController.signout.bind(authController));
+
 export default router;

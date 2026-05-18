@@ -140,6 +140,10 @@ class AuthService {
         return tokens;
     }
 
+    async signout(userId: string): Promise<void> {
+        await authRepository.clearRefreshToken(userId);
+    }
+
 
     private toPublicUser(user: IUserDocument): IUserPublic {
         return {

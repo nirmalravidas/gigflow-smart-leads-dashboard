@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { authService } from "../service/auth.service";
 import { sendSuccess } from "../../../utils/apiResponse";
-import { HttpStatus } from "../../../types";
+import { HttpStatus, IAuthenticatedRequest } from "../../../types";
 
 class AuthController {
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -60,6 +60,16 @@ class AuthController {
             next(error);
         }
      }
+
+     async signout(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const authReq = req as IAuthenticatedRequest;
+            await authService.signout(authReq.user.userId);
+            sendSuccess(res, 'Signed out successfully');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 export const authController = new AuthController();
