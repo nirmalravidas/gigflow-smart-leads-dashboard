@@ -50,7 +50,7 @@ const SigninPage: React.FC = () => {
             <Zap size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="font-extrabold text-2xl text-foreground tracking-tight leading-none">SmartLeads</h1>
+            <h1 className="font-extrabold text-2xl text-foreground tracking-tight leading-none">GigFlow</h1>
             <p className="text-xs text-muted-foreground font-medium mt-1">Lead management dashboard</p>
           </div>
         </div>

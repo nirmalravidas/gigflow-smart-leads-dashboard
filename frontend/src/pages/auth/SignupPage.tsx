@@ -54,19 +54,19 @@ const SignupPage: React.FC = () => {
             <Zap size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="font-extrabold text-2xl text-foreground tracking-tight leading-none">SmartLeads</h1>
+            <h1 className="font-extrabold text-2xl text-foreground tracking-tight leading-none">GigFlow</h1>
             <p className="text-xs text-muted-foreground font-medium mt-1">Lead management dashboard</p>
           </div>
         </div>
 
         <div className="glass-panel rounded-2xl p-6 md:p-8 shadow-2xl">
           <h2 className="text-xl font-bold text-foreground mb-1">Create account</h2>
-          <p className="text-sm text-muted-foreground mb-6">Get started with SmartLeads</p>
+          <p className="text-sm text-muted-foreground mb-6">Get started with GigFlow</p>
 
           <form onSubmit={handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
             <Input
               label="Full Name"
-              placeholder="Rahul Sharma"
+              placeholder="John Doe"
               icon={<User size={16} />}
               error={errors.name?.message}
               {...register('name')}

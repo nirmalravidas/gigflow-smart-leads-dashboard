@@ -61,7 +61,7 @@ export const LeadForm: React.FC<LeadFormProps> = ({ lead, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit((d) => mutation.mutate(d))} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <Input label="Name" placeholder="Rahul Sharma" error={errors.name?.message} {...register('name')} />
+        <Input label="Name" placeholder="John Doe" error={errors.name?.message} {...register('name')} />
         <Input label="Email" type="email" placeholder="rahul@example.com" error={errors.email?.message} {...register('email')} />
       </div>
       <div className="grid grid-cols-2 gap-4">

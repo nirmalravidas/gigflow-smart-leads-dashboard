@@ -71,7 +71,7 @@ const LandingPage = () => {
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
               <Zap size={16} className="text-white" />
             </span>
-            <span className="font-bold text-lg tracking-tight text-gradient">SmartLeads</span>
+            <span className="font-bold text-lg tracking-tight text-gradient">GigFlow</span>
           </button>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
@@ -103,7 +103,7 @@ const LandingPage = () => {
         <header className="text-center max-w-4xl mx-auto mb-24 animate-slide-up">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-medium text-primary mb-8 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
             <Zap size={14} />
-            <span>SmartLeads 2.0 is now live</span>
+            <span>GigFlow 2.0 is now live</span>
             <span className="hidden sm:inline opacity-60">— Experience the new standard</span>
           </div>
 
@@ -173,7 +173,7 @@ const LandingPage = () => {
             {[
               {
                 quote: "It's blindingly fast. We cut our response times in half simply because we aren't fighting the UI anymore.",
-                name: 'Rahul Sharma',
+                name: 'John Doe',
                 role: 'VP of Sales',
                 initials: 'RS',
                 bg: 'bg-primary/20',
@@ -252,11 +252,11 @@ const LandingPage = () => {
             <span className="w-6 h-6 rounded-lg bg-primary flex items-center justify-center">
               <Zap size={12} className="text-white" />
             </span>
-            <span className="font-bold text-foreground tracking-tight">SmartLeads</span>
+            <span className="font-bold text-foreground tracking-tight">GigFlow</span>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} SmartLeads. Built with React & Tailwind CSS.
+            © {new Date().getFullYear()} GigFlow. Built with React & Tailwind CSS.
           </p>
 
           <div className="flex gap-6 text-sm font-medium text-muted-foreground">

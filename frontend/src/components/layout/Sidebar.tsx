@@ -65,7 +65,7 @@ export const Sidebar = ({
         </div>
         {!collapsed && (
           <span className="font-bold text-foreground text-[15px] tracking-tight relative z-10 text-gradient">
-            SmartLeads
+            GigFlow
           </span>
         )}
 

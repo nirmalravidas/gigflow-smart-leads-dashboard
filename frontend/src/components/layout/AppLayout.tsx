@@ -25,7 +25,7 @@ export const AppLayout: React.FC = () => {
             <Menu size={18} />
           </button>
           <div className="ml-3">
-            <p className="text-sm font-semibold text-foreground leading-none">SmartLeads</p>
+            <p className="text-sm font-semibold text-foreground leading-none">GigFlow</p>
             <p className="text-[11px] text-primary mt-0.5 font-medium tracking-wide">Leads dashboard</p>
           </div>
         </header>

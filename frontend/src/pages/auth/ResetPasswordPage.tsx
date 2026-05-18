@@ -65,7 +65,7 @@ const ResetPasswordPage = () => {
             <Zap size={18} className="text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-[#e8edf5] leading-none">SmartLeads</h1>
+            <h1 className="font-bold text-[#e8edf5] leading-none">GigFlow</h1>
             <p className="text-xs text-[#8a97b0]">Set new password</p>
           </div>
         </div>
