@@ -53,6 +53,26 @@ class AuthService {
         }
     }
 
+    async resendVerificationEmail(email: string): Promise<void> {
+        const user = await authRepository.findByEmail(email.toLowerCase());
+
+        if (!user) return;
+
+        if (user.isEmailVerified) {
+            throw new ValidationError('Email is already verified');
+        }
+
+        const verificationToken = generateSecureToken();
+
+        await authRepository.setVerificationToken(
+            user._id.toString(),
+            verificationToken,
+            new Date(Date.now() + VERIFICATION_EXPIRY_MS),
+        );
+
+        await sendVerificationCodeEmail(user.email, verificationToken);
+    }
+
 
     private toPublicUser(user: IUserDocument): IUserPublic {
         return {
@@ -68,4 +88,4 @@ class AuthService {
 
 }
 
-export const authServive = new AuthService();
+export const authService = new AuthService();

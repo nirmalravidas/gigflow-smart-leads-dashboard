@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { authServive } from "../service/auth.service";
+import { authService } from "../service/auth.service";
 import { sendSuccess } from "../../../utils/apiResponse";
 import { HttpStatus } from "../../../types";
 
 class AuthController {
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const result = await authServive.signup(req.body);
+            const result = await authService.signup(req.body);
 
             sendSuccess(
                 res, 
@@ -22,9 +22,22 @@ class AuthController {
     async verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
             const { token } = req.body as {token: string};
-            const result = await authServive.verifyEmail(token);
+            const result = await authService.verifyEmail(token);
             sendSuccess(res, 'Email verified successfully', result);
         } catch(error){
+            next(error);
+        }
+    }
+
+    async resendVerificationEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email } = req.body as { email: string };
+            await authService.resendVerificationEmail(email);
+            sendSuccess(
+                res,
+                'If an account exists with that email, a verification link has been sent.',
+            );
+        } catch (error) {
             next(error);
         }
     }
